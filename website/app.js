@@ -5,7 +5,7 @@ const generateBtn = document.getElementById('generate');
 
 // Create a new date instance dynamically with JS
 let d = new Date();
-let newDate = d.getMonth()+'.'+ d.getDate()+'.'+ d.getFullYear();
+let newDate = d.getMonth()+1+'.'+ d.getDate()+'.'+ d.getFullYear();
 
 //get weather data
 const getWeatherData = async (baseUrl,zip,apiKey) => {
@@ -42,8 +42,8 @@ const updateUI = async () =>{
     try {
         const response = await request.json();
         document.getElementById('date').innerHTML = 'The date today is:  ' + response.date;
-        document.getElementById('temp').innerHTML = 'Temprature today is : ' + response.temp + 'degrees.';
-        document.getElementById('content').innerHTML = 'Feelings are  ' + response.feelings + '.';
+        document.getElementById('temp').innerHTML = 'Temprature today is : ' + Math.round(response.temp) + ' degrees.';
+        document.getElementById('content').innerHTML = 'You are  ' + response.feelings + '.';
     } catch (error){
         console.log('error',error);
     }
@@ -53,6 +53,10 @@ const updateUI = async () =>{
 generateBtn.addEventListener('click', async ()=>{
     const zip = document.getElementById("zip").value;
     const feelingData = document.getElementById('feelings');
+    if (!zip || !feelingData) {
+        alert('zip and feelings fields are required!');
+    }
+    
     const weather = await getWeatherData(baseURL,zip,apiKey);
     await sendData({
         date: newDate,
